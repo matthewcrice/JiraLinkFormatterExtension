@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Jira Link Formatter",
   "version": "1.0.0",
-  "description": "Copies Jira issue links as formatted text: 'Issue Title: PROJ-123' with hyperlink.",
+  "description": "Copies Jira issue links as formatted text: 'PROJ-123: Issue Title' with hyperlink.",
   "permissions": [
     "clipboardWrite",
     "contextMenus"

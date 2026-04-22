@@ -2,7 +2,7 @@
 
 A Chrome extension that formats Jira issue links for pasting into rich-text tools like Slack, Notion, Google Docs, and Confluence.
 
-**Output format:** `Issue Title: PROJ-123` where `PROJ-123` is a hyperlink to the issue.
+**Output format:** `PROJ-123: Issue Title` where `PROJ-123` is a hyperlink to the issue.
 
 ---
 

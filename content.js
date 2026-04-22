@@ -30,9 +30,9 @@ function getIssueTitle() {
 }
 
 function buildClipboardContent(issueId, issueTitle, url) {
-  const label = issueTitle ? `${issueTitle}: ${issueId}` : issueId;
+  const label = issueTitle ? `${issueId}: ${issueTitle}` : issueId;
   const html = issueTitle
-    ? `${issueTitle}: <a href="${url}">${issueId}</a>`
+    ? `<a href="${url}">${issueId}</a>: ${issueTitle}`
     : `<a href="${url}">${issueId}</a>`;
   const plain = label;
   return { html, plain };

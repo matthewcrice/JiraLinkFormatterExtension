@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-A Chrome extension (Manifest V3) that adds a right-click context menu item on Jira issue pages to copy a formatted rich-text link: `Issue Title: PROJ-123` where the issue key is a hyperlink.
+A Chrome extension (Manifest V3) that adds a right-click context menu item on Jira issue pages to copy a formatted rich-text link: `PROJ-123: Issue Title` where the issue key is a hyperlink.
 
 ## Development
 
