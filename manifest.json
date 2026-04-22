@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Jira Link Formatter",
+  "version": "1.0.0",
+  "description": "Copies Jira issue links as formatted text: 'Issue Title: PROJ-123' with hyperlink.",
+  "permissions": [
+    "clipboardWrite",
+    "clipboardRead",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://*.atlassian.net/browse/*",
+    "*://*/browse/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.atlassian.net/browse/*",
+        "*://*/browse/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Copy Jira Link"
+  },
+  "commands": {
+    "copy-jira-link": {
+      "suggested_key": {
+        "default": "Alt+C",
+        "mac": "Alt+C"
+      },
+      "description": "Copy current Jira issue as formatted link"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
