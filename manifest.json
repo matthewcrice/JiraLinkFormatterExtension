@@ -6,7 +6,8 @@
   "permissions": [
     "clipboardWrite",
     "clipboardRead",
-    "activeTab"
+    "activeTab",
+    "contextMenus"
   ],
   "host_permissions": [
     "*://*.atlassian.net/browse/*",
