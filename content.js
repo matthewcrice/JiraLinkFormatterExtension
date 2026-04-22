@@ -45,35 +45,6 @@ function writeToClipboard(html, plain) {
   return navigator.clipboard.write([item]);
 }
 
-function handleCopyEvent(e) {
-  const selection = window.getSelection();
-  const selectedText = selection ? selection.toString().trim() : '';
-
-  const currentUrl = window.location.href;
-  const currentIssueId = getIssueIdFromUrl(currentUrl);
-
-  // If user selected text that is a Jira URL, format that URL
-  if (selectedText && JIRA_URL_PATTERN.test(selectedText)) {
-    const issueId = getIssueIdFromUrl(selectedText);
-    // We're on this page only if the selected URL matches the current issue
-    const title = issueId === currentIssueId ? getIssueTitle() : null;
-    const { html, plain } = buildClipboardContent(issueId, title, selectedText);
-    e.preventDefault();
-    writeToClipboard(html, plain).catch(console.error);
-    showToast(`Copied: ${plain}`);
-    return;
-  }
-
-  // If nothing selected and we're on a Jira issue page, copy the current issue
-  if (!selectedText && currentIssueId) {
-    const title = getIssueTitle();
-    const { html, plain } = buildClipboardContent(currentIssueId, title, currentUrl);
-    e.preventDefault();
-    writeToClipboard(html, plain).catch(console.error);
-    showToast(`Copied: ${plain}`);
-  }
-}
-
 function showToast(message) {
   const existing = document.getElementById('jira-copy-toast');
   if (existing) existing.remove();
@@ -104,18 +75,41 @@ function showToast(message) {
   }, 2500);
 }
 
-document.addEventListener('copy', handleCopyEvent);
+async function fetchIssueTitle(url) {
+  const response = await fetch(url);
+  const html = await response.text();
+  const doc = new DOMParser().parseFromString(html, 'text/html');
 
-// Also listen for the keyboard command from background.js
+  const selectors = [
+    'h1[data-testid="issue.views.issue-base.foundation.summary.heading"]',
+    'h1[data-component-selector="issue-title"]',
+    '#summary-val',
+    '.issue-header-content h1',
+    'h1.issue-summary',
+  ];
+  for (const sel of selectors) {
+    const el = doc.querySelector(sel);
+    if (el && el.textContent.trim()) return el.textContent.trim();
+  }
+
+  // Fall back to <title> tag — works for Jira Cloud SPA and Jira Server
+  const titleMatch = doc.title.match(/^[A-Z][A-Z0-9_]+-\d+\s+(.+?)(?:\s[-|].*)?$/);
+  if (titleMatch) return titleMatch[1].trim();
+
+  return null;
+}
+
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg.action === 'copyJiraLink') {
-    const url = window.location.href;
+    const url = msg.url || window.location.href;
     const issueId = getIssueIdFromUrl(url);
     if (!issueId) return;
-    const title = getIssueTitle();
-    const { html, plain } = buildClipboardContent(issueId, title, url);
-    writeToClipboard(html, plain)
-      .then(() => showToast(`Copied: ${plain}`))
-      .catch(console.error);
+
+    const getTitle = msg.url ? fetchIssueTitle(url) : Promise.resolve(getIssueTitle());
+
+    getTitle.then(title => {
+      const { html, plain } = buildClipboardContent(issueId, title, url);
+      return writeToClipboard(html, plain).then(() => showToast(`Copied: ${plain}`));
+    }).catch(console.error);
   }
 });

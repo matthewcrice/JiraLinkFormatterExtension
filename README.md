@@ -8,14 +8,12 @@ A Chrome extension that formats Jira issue links for pasting into rich-text tool
 
 ## How to use
 
-Open any Jira issue page, then trigger a copy using any of these methods:
+Right-click on any Jira page and select **Copy Jira issue link**. There are two ways to trigger it:
 
-| Method | How |
+| Trigger | Result |
 |---|---|
-| Keyboard shortcut | Press `Alt+C` |
-| Empty copy | Press `Ctrl+C` with no text selected |
-| Copy a Jira URL | Select a Jira issue URL and press `Ctrl+C` |
-| Toolbar button | Click the extension icon → **Copy Current Issue Link** |
+| Right-click anywhere on an issue page | Copies the current issue (title read from the page) |
+| Right-click a Jira issue link | Copies that linked issue (title fetched from the target page) |
 
 A toast notification confirms the copy. Paste into any app that supports rich text to get the hyperlinked format.
 
@@ -29,16 +27,19 @@ A toast notification confirms the copy. Paste into any app that supports rich te
 2. Open Chrome and navigate to `chrome://extensions/`.
 3. Enable **Developer mode** (toggle in the top-right corner).
 4. Click **Load unpacked** and select the repository folder.
-5. The extension icon will appear in your toolbar.
 
 ---
 
 ## Compatibility
 
-Works on any Jira instance where issue URLs follow the `/browse/PROJ-123` pattern:
+Fully supported (issue pages and query/board/list pages):
 
+- `jira.unity3d.com`
 - Jira Cloud (`*.atlassian.net`)
-- Jira Server / Data Center (any hostname)
+
+Supported on issue pages (`/browse/`) only:
+
+- Other Jira Server / Data Center instances
 
 ---
 
@@ -46,8 +47,6 @@ Works on any Jira instance where issue URLs follow the `/browse/PROJ-123` patter
 
 ```
 manifest.json   Extension manifest (Manifest V3)
-content.js      Copy interception and clipboard formatting logic
-background.js   Keyboard shortcut handler
-popup.html      Toolbar popup UI
-popup.js        Popup button logic
+content.js      Clipboard formatting and title fetching logic
+background.js   Context menu registration and click handler
 ```

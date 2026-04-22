@@ -5,37 +5,24 @@
   "description": "Copies Jira issue links as formatted text: 'Issue Title: PROJ-123' with hyperlink.",
   "permissions": [
     "clipboardWrite",
-    "clipboardRead",
-    "activeTab",
     "contextMenus"
   ],
   "host_permissions": [
-    "*://*.atlassian.net/browse/*",
+    "*://*.atlassian.net/*",
+    "*://jira.unity3d.com/*",
     "*://*/browse/*"
   ],
   "content_scripts": [
     {
       "matches": [
-        "*://*.atlassian.net/browse/*",
+        "*://*.atlassian.net/*",
+        "*://jira.unity3d.com/*",
         "*://*/browse/*"
       ],
       "js": ["content.js"],
       "run_at": "document_idle"
     }
   ],
-  "action": {
-    "default_popup": "popup.html",
-    "default_title": "Copy Jira Link"
-  },
-  "commands": {
-    "copy-jira-link": {
-      "suggested_key": {
-        "default": "Alt+C",
-        "mac": "Alt+C"
-      },
-      "description": "Copy current Jira issue as formatted link"
-    }
-  },
   "background": {
     "service_worker": "background.js"
   }
